@@ -1,8 +1,8 @@
 require('dotenv').load();
 var express = require('express');
-var db = require('mongoose');
+var db = require('./config/db');
 
-db.connect('mongodb://node:myMongoPW!@ds059135.mlab.com:59135/meganote');
+
 var app = express();
 
 var NoteSchema = db.Schema({
