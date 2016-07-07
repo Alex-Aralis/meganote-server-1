@@ -1,6 +1,7 @@
 require('dotenv').load();
 var express = require('express');
 var Note = require('./models/note');
+var User = require('./models/user');
 var bodyParser = require('body-parser');
 
 var app = express();
@@ -61,6 +62,29 @@ app.post('/', function(req, res) {
     });
 });
 
+app.post('/users', (req, res) => {
+    if(req.body.user.password !== req.body.user.passwordConfirmation){
+        res.status(500).json({
+            message: 'user.password and user.passwordConfirmation do not match.',
+        });
+        
+        return;
+    }
+
+
+    let user = new User({
+        name: req.body.user.name,
+        username: req.body.user.username,
+        password: req.body.user.password,
+    });
+
+    user.save().then(
+        userData => res.json({
+            message: 'User successfully saved',
+            user: user,
+        })
+    )
+});
 // UPDATE a note
 app.put('/:id', function(req, res) {
   Note
