@@ -6,7 +6,6 @@ var userSchema = db.Schema({
   name: String,
   username: String,
   hash: String,
-  work_factor: Number,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });

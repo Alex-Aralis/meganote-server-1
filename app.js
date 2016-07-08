@@ -80,7 +80,6 @@ app.post('/users', (req, res) => {
             name: req.body.user.name,
             username: req.body.user.username,
             hash,
-            work_factor: WORK_FACTOR,
         });
 
         user.save().then(
