@@ -1,10 +1,13 @@
 require('dotenv').load();
+var bcrypt = require('bcryptjs');
 var express = require('express');
 var Note = require('./models/note');
 var User = require('./models/user');
 var bodyParser = require('body-parser');
 
 var app = express();
+
+const WORK_FACTOR = 10;
 
 // Middleware
 app.use(function(req, res, next) {
@@ -72,18 +75,21 @@ app.post('/users', (req, res) => {
     }
 
 
-    let user = new User({
-        name: req.body.user.name,
-        username: req.body.user.username,
-        password: req.body.user.password,
-    });
+    bcrypt.hash(req.body.user.password, WORK_FACTOR, (err, hash) => {
+        let user = new User({
+            name: req.body.user.name,
+            username: req.body.user.username,
+            hash,
+            work_factor: WORK_FACTOR,
+        });
 
-    user.save().then(
-        userData => res.json({
-            message: 'User successfully saved',
-            user: user,
-        })
-    )
+        user.save().then(
+            userData => res.json({
+                message: 'User successfully saved',
+                user,
+            })
+        )
+    });
 });
 // UPDATE a note
 app.put('/:id', function(req, res) {

@@ -5,7 +5,8 @@ var htmlToText = require('html-to-text');
 var userSchema = db.Schema({
   name: String,
   username: String,
-  password: String,
+  hash: String,
+  work_factor: Number,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
