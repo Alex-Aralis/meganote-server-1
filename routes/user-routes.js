@@ -56,7 +56,6 @@ router.post('/sign-in', (req, res) => {
             user: user,
             authToken: token
           });
-          res.json({result});
         }
     });
 
@@ -68,7 +67,7 @@ router.post('/sign-in', (req, res) => {
 });
 
 // CREATE a user
-router.post('/', function(req, res) {
+router.post('/sign-up', function(req, res) {
   console.log(req.body.user);
 
   if (!passwordsPresent(req.body.user) || !passwordsMatch(req.body.user)) {
@@ -99,6 +98,7 @@ router.post('/', function(req, res) {
     )
     .catch(
         err => {
+            res.status(404).json({err});
             console.log(err);
         }
     );
