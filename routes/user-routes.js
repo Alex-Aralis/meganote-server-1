@@ -34,40 +34,8 @@ router.patch('/', (req, res) => {
     });
 });
 
-//SIGN IN
-router.post('/sign-in', (req, res) => {
-  console.log(req.body.user);
-
-  User.findOne({
-    username: req.body.user.username,
-  })
-  .then(user => {
-    console.log(user);
-    bcrypt.compare(req.body.user.password, user.passwordDigest, (err, result) => {
-        if(err){
-            res.status(500).json({err});
-        }else if(!result){
-            res.status(500).json({message: 'Password incorrect'});
-        }else if(result){
-          var token = jwt.sign(user._id, process.env.JWT_SECRET, {
-            expiresIn: 60*60*24
-          });
-          res.json({
-            user: user,
-            authToken: token
-          });
-        }
-    });
-
-  })
-  .catch(err => {
-    res.status(404).json({err});
-  });
-
-});
-
 // CREATE a user
-router.post('/sign-up', function(req, res) {
+router.post('/', function(req, res) {
   console.log(req.body.user);
 
   if (!passwordsPresent(req.body.user) || !passwordsMatch(req.body.user)) {
