@@ -1,12 +1,27 @@
+let jwt = require('jsonwebtoken');
+let User = require('../models/user');
+
 module.exports = (req, res, next) => {
     console.log('entering auth middleware');
     if(isPreflight(req) || isPublicEndpoint(req)) { next(); return; }
 
     var token = req.headers.authorization;
-    console.log(token);
-    
     if(token){
-        next();
+        jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+            if(payload){
+                User.findOne({_id: payload.id})
+                    .then(user => {
+                        console.log(user);
+                        req.user = user;
+                        next();
+                    })
+                    .catch(err => {
+                        res.status(401).json({message: 'Authentication required.'});
+                    })
+            }else{
+                res.status(401).json({message: 'Authentication required.'});
+            }
+        });
     }
     else {
         res.status(401).json({message: 'Authentication required.'});
