@@ -5,6 +5,7 @@ var noteRoutes = require('./routes/note-routes');
 var userRoutes = require('./routes/user-routes');
 var sessionRoutes = require('./routes/session-routes');
 var headersMiddleware = require('./middleware/headers');
+var authMiddleware = require('./middleware/auth');
 
 var app = express();
 
@@ -13,6 +14,9 @@ app.use(headersMiddleware);
 
 // Body parsing for JSON POST/PUT payloads
 app.use(bodyParser.json());
+
+// Expose Auth Token
+app.use(authMiddleware);
 
 // Routes
 app.use('/api/v1/notes', noteRoutes);

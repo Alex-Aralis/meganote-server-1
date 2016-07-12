@@ -51,25 +51,23 @@ router.post('/', function(req, res) {
     passwordDigest: bcrypt.hashSync(req.body.user.password, 10)
   });
 
+
   user
-    .save()
-    .then(
-      userData => {
-        var token = jwt.sign(userData._id, process.env.JWT_SECRET, {
+    .save(
+      err => {
+        if(err){
+            console.log(`error in creating user ${err}`);
+            res.status(404).json({err});
+        }
+
+        var token = jwt.sign(user._id, process.env.JWT_SECRET, {
           expiresIn: 60*60*24
         });
         res.json({
-          user: userData,
+          user: user,
           authToken: token
         });
-      }
-    )
-    .catch(
-        err => {
-            res.status(404).json({err});
-            console.log(err);
-        }
-    );
+      });
 });
 
 module.exports = router;

@@ -11,7 +11,7 @@ var userSchema = db.Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   passwordDigest: {
     type: String,
