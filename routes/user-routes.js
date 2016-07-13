@@ -5,8 +5,8 @@ var User = require('../models/user');
 
 //UPDATE user
 router.patch('/', (req, res) => {
-    if(req.body.newUser.name) req.user.name = req.body.newUser.name;
-    if(req.body.newUser.username) req.user.username = req.body.newUser.username;
+    req.user.name = req.body.newUser.name;
+    req.user.username = req.body.newUser.username;
 
     req.user
         .save()
