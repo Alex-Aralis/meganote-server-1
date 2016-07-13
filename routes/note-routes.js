@@ -39,14 +39,15 @@ router.put('/:id', function(req, res) {
 
   req.user.save();
 
-  res.json(note);
+  res.json({note});
 });
 
 // DELETE a note
 router.delete('/:id', function(req, res) {
-  let note = req.user.notes.id(req.params.id).remove();
-  req.user.save();
+  let note = req.user.notes.id(req.params.id);
 
+  note.remove();
+  req.user.save();
   res.json({note});
 });
 
