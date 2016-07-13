@@ -16,14 +16,17 @@ module.exports = (req, res, next) => {
                         next();
                     })
                     .catch(err => {
+                        console.log(3);
                         res.status(401).json({message: 'Authentication required.'});
                     })
             }else{
+                console.log(2);
                 res.status(401).json({message: 'Authentication required.'});
             }
         });
     }
     else {
+        console.log(1);
         res.status(401).json({message: 'Authentication required.'});
     }
 };

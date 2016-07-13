@@ -1,89 +1,53 @@
 var router = require('express').Router();
 var Note = require('../models/note');
+var User = require('../models/user');
 
 // READ all notes
 router.get('/', function(req, res) {
-  Note
-    .find()
-    .sort({ updated_at: 'desc' })
-    .then(function(notes) {
-      res.json(notes);
-    });
+  console.log(req.user.notes);
+  res.json(req.user.notes);
 });
 
 // READ one note
 router.get('/:id', function(req, res) {
-  Note
-    .findOne({
-      _id: req.params.id
-    })
-    .then(function(note) {
-      res.json(note);
-    });
+  console.log('getting note');
+  console.log(req.user.notes);
+  console.log(req.user.notes.id(req.params.id));
+  res.json(req.user.notes.id(req.params.id));
 });
 
 // CREATE a note
 router.post('/', function(req, res) {
-  var note = new Note({
+  let note = req.user.notes.addToSet({
     title: req.body.note.title,
     body_html: req.body.note.body_html
-  });
+  })[0];
 
-  note
-    .save()
-    .then(function(noteData) {
-      res.json({
-        message: 'Successfully created note',
-        note: noteData
-      });
-    });
+  req.user.save();
+
+  console.log(note);
+  res.json({note});
 });
 
 // UPDATE a note
 router.put('/:id', function(req, res) {
-  Note
-    .findOne({
-      _id: req.params.id
-    })
-    .then(
-      function(note) {
-        note.title = req.body.note.title;
-        note.body_html = req.body.note.body_html;
-        note
-          .save()
-          .then(
-            function() {
-              res.json({
-                message: 'Your changes have been saved.',
-                note: note
-              });
-            },
-            function(result) {
-              res.json({ message: 'Aww, cuss!' });
-            }
-          );
-      },
-      function(result) {
-        res.json({ message: 'Aww, cuss!' });
-      });
+
+  let note = req.user.notes.id(req.params.id);
+
+  note.title = req.body.note.title;
+  note.body_html = req.body.note.body_html;
+
+  req.user.save();
+
+  res.json(note);
 });
 
 // DELETE a note
 router.delete('/:id', function(req, res) {
-  Note
-    .findOne({
-      _id: req.params.id
-    })
-    .then(function(note) {
-      note
-        .remove()
-        .then(function() {
-          res.json({
-            message: 'That note has been deleted.',
-            note: note
-          })
-        });
-    });
+  let note = req.user.notes.id(req.params.id).remove();
+  req.user.save();
+
+  res.json({note});
 });
 
 module.exports = router;
