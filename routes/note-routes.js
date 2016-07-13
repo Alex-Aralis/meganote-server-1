@@ -4,15 +4,11 @@ var User = require('../models/user');
 
 // READ all notes
 router.get('/', function(req, res) {
-  console.log(req.user.notes);
   res.json(req.user.notes);
 });
 
 // READ one note
 router.get('/:id', function(req, res) {
-  console.log('getting note');
-  console.log(req.user.notes);
-  console.log(req.user.notes.id(req.params.id));
   res.json(req.user.notes.id(req.params.id));
 });
 
@@ -25,7 +21,6 @@ router.post('/', function(req, res) {
 
   req.user.save();
 
-  console.log(note);
   res.json({note});
 });
 
@@ -36,6 +31,7 @@ router.put('/:id', function(req, res) {
 
   note.title = req.body.note.title;
   note.body_html = req.body.note.body_html;
+  note.updated_at = Date.now();
 
   req.user.save();
 

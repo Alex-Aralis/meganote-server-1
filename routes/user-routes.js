@@ -5,8 +5,6 @@ var User = require('../models/user');
 
 //UPDATE user
 router.patch('/', (req, res) => {
-    console.log(jwt.verify(req.body.token, process.env.JWT_SECRET));
-
     if(req.body.newUser.name) req.user.name = req.body.newUser.name;
     if(req.body.newUser.username) req.user.username = req.body.newUser.username;
 
@@ -18,7 +16,6 @@ router.patch('/', (req, res) => {
             });
         })
     .catch(err => {
-        console.log(err);
         res.status(500).json({
             err
         });
@@ -27,10 +24,7 @@ router.patch('/', (req, res) => {
 
 // CREATE a user
 router.post('/', function(req, res) {
-  console.log(req.body.user);
-
   if (!passwordsPresent(req.body.user) || !passwordsMatch(req.body.user)) {
-    console.log(4);
     res.status(422).json({
       message: 'Passwords must match!'
     });
@@ -44,13 +38,11 @@ router.post('/', function(req, res) {
   });
 
 
-  console.log(user);
 
   user
     .save(
       err => {
         if(err){
-            console.log(`error in creating user ${err}`);
             res.status(404).json({err});
             return;
         }

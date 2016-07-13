@@ -13,7 +13,6 @@ let noteSchema = db.Schema({
 noteSchema.pre('save', function(next) {
     this.body_text = htmlToText.fromString(this.body_html);
     this.body_html = sanitizeHtml(this.body_html);
-    this.updated_at = Date.now();
     next();
 });
 
